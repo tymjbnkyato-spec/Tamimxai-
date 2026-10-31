@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tamim X AI - Voice Chat</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--red-neon:#ff0a1d;--red-glow:rgba(255,10,29,.8);--text-white:#fff}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif;user-select:none}
+body{background:#050505;display:flex;justify-content:center;align-items:center;min-height:100vh}
+.phone-shell{width:min(390px,100vw);height:min(844px,100dvh);min-height:650px;position:relative;border-radius:50px;border:8px solid #111;overflow:hidden;box-shadow:0 0 60px rgba(255,0,0,.15),0 30px 60px rgba(0,0,0,.9);background:#000}
+.ambient-glow{position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,rgba(255,10,29,.15) 0%,transparent 50%),radial-gradient(circle at 50% 80%,rgba(255,10,29,.1) 0%,transparent 40%);z-index:1;pointer-events:none}
+.ui-layer{position:absolute;inset:0;width:100%;height:100%;z-index:10;display:flex;flex-direction:column;padding:25px 24px 28px}
+.status-bar{display:flex;justify-content:space-between;color:var(--text-white);font-size:14px;font-weight:600;margin-bottom:25px;text-shadow:0 1px 3px #000}
+.status-icons{display:flex;gap:6px;align-items:center}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:auto}
+.menu-icon{display:flex;flex-direction:column;gap:6px;cursor:pointer;padding:5px}
+.menu-icon span{width:26px;height:3px;background:#fff;border-radius:3px;box-shadow:0 0 5px rgba(255,255,255,.3)}
+.logo-text{font-size:22px;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px;letter-spacing:.5px;text-shadow:0 2px 5px #000}
+.logo-text .x{color:var(--red-neon);font-weight:900;text-shadow:0 0 15px var(--red-glow)}
+.logo-icon{color:var(--red-neon);font-size:18px;text-shadow:0 0 15px var(--red-glow)}
+.pro-btn{background:transparent;border:1.5px solid #e5b85c;color:#e5b85c;padding:5px 12px;border-radius:20px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:5px}
+.main-title-area{text-align:center;margin-bottom:15px;margin-top:clamp(90px,19vh,180px)}
+.voice-chat-title{font-size:48px;font-weight:900;color:#fff;line-height:1.1;letter-spacing:1px;font-family:Impact,'Inter',sans-serif;text-shadow:2px 2px 0 #000,0 0 20px rgba(255,255,255,.2)}
+.voice-chat-title span{color:var(--red-neon);text-shadow:2px 2px 0 #000,0 0 20px var(--red-glow),0 0 40px var(--red-glow)}
+.subtitle{font-size:15px;color:#f0f0f0;margin-top:2px;font-weight:500;text-shadow:0 2px 4px #000}
+.mic-core-area{display:flex;align-items:center;justify-content:center;gap:15px;margin-bottom:25px;height:150px}
+.waveform-left,.waveform-right{display:flex;align-items:center;gap:4px;height:60px}
+.waveform-left span,.waveform-right span{width:3px;background:var(--red-neon);border-radius:2px;box-shadow:0 0 10px var(--red-glow);animation:wavePulse 1.2s infinite ease-in-out alternate}
+.waveform-left span:nth-child(1){height:12px;animation-delay:.1s}.waveform-left span:nth-child(2){height:30px;animation-delay:.3s}.waveform-left span:nth-child(3){height:45px;animation-delay:.5s}.waveform-left span:nth-child(4){height:20px;animation-delay:.2s}.waveform-left span:nth-child(5){height:8px;animation-delay:.6s}
+.waveform-right span:nth-child(1){height:8px;animation-delay:.4s}.waveform-right span:nth-child(2){height:20px;animation-delay:.1s}.waveform-right span:nth-child(3){height:45px;animation-delay:.6s}.waveform-right span:nth-child(4){height:30px;animation-delay:.3s}.waveform-right span:nth-child(5){height:12px;animation-delay:.5s}
+@keyframes wavePulse{0%{transform:scaleY(.4);opacity:.5}100%{transform:scaleY(1.1);opacity:1}}
+.glowing-mic{width:130px;height:130px;border-radius:50%;background:radial-gradient(circle,rgba(255,0,34,.15) 0%,rgba(255,0,34,0) 70%);display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer}
+.glowing-mic:before,.glowing-mic:after{content:'';position:absolute;border-radius:50%;border:2px solid var(--red-neon);box-shadow:inset 0 0 20px var(--red-glow),0 0 20px var(--red-glow)}
+.glowing-mic:before{width:100%;height:100%;opacity:.5}.glowing-mic:after{width:75%;height:75%;opacity:.8;animation:pulseRing 2s infinite}
+.mic-icon-inner{width:65px;height:65px;background:#050505;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:2;box-shadow:0 0 25px var(--red-glow);border:1px solid rgba(255,0,34,.4)}
+.mic-icon-inner svg{width:30px;height:30px;fill:var(--red-neon);filter:drop-shadow(0 0 8px var(--red-glow))}
+@keyframes pulseRing{0%{transform:scale(1);opacity:1}50%{transform:scale(1.15);opacity:.3}100%{transform:scale(1);opacity:1}}
+.status-text{text-align:center;color:#fff;font-size:16px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:auto;text-shadow:0 2px 4px #000}
+.red-dot{width:10px;height:10px;background:var(--red-neon);border-radius:50%;box-shadow:0 0 10px var(--red-glow);animation:blink 1s infinite alternate}
+@keyframes blink{0%{opacity:.2}100%{opacity:1}}
+.bottom-nav{display:flex;justify-content:space-between;align-items:center;background:rgba(15,0,0,.6);border:1px solid rgba(255,10,29,.3);border-radius:50px;padding:15px 20px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 10px 30px rgba(0,0,0,.8),inset 0 0 20px rgba(255,0,34,.15)}
+.action-btn{display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;background:transparent;border:0;color:#fff;font-size:13px;font-weight:500;transition:transform .2s}
+.action-btn:active{transform:scale(.95)}
+.icon-circle{width:50px;height:50px;border-radius:50%;border:1.5px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;transition:all .3s;background:rgba(0,0,0,.3)}
+.icon-circle svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.action-btn.center-btn .icon-circle{border:2px solid var(--red-neon);box-shadow:0 0 20px var(--red-glow),inset 0 0 15px rgba(255,0,34,.4);background:rgba(255,0,34,.15)}
+.action-btn.center-btn .icon-circle svg{stroke:var(--red-neon);filter:drop-shadow(0 0 5px var(--red-glow))}
+.action-btn.center-btn span{color:var(--red-neon);text-shadow:0 0 8px rgba(255,0,34,.8);font-weight:600}
+#chatLog{position:absolute;left:22px;right:22px;bottom:125px;max-height:125px;overflow:auto;color:#fff;font-size:12px;line-height:1.45;text-align:left;pointer-events:auto}
+#chatLog p{margin:5px 0;background:rgba(25,25,25,.8);padding:6px 9px;border-radius:9px}
+@media(max-height:700px){.main-title-area{margin-top:65px}.mic-core-area{height:120px;margin-bottom:12px}.glowing-mic{width:105px;height:105px}.bottom-nav{padding:9px 16px}}
+</style>
+</head>
+<body>
+<div class="phone-shell">
+<div class="ambient-glow"></div>
+<div class="ui-layer">
+<div class="status-bar"><span id="clock">9:09</span><div class="status-icons">
+<svg width="16" height="12" viewBox="0 0 24 24" fill="white"><path d="M2 22h20V2L2 22z"/></svg>
+<svg width="16" height="12" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9v-2h2v2zm0-4H9V7h2v5z"/></svg>
+<svg width="20" height="12" viewBox="0 0 24 24" fill="white"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+</div></div>
+<div class="header">
+<div class="menu-icon"><span></span><span></span><span></span></div>
+<div class="logo-text"><span class="logo-icon">✦</span> Tamim <span class="x">X</span> AI</div>
+<button class="pro-btn"><span style="font-size:14px">👑</span> Pro</button>
+</div>
+<div class="main-title-area"><div class="voice-chat-title">Voice <span>Chat</span></div><p class="subtitle">Talk with Tamim X AI</p></div>
+<div class="mic-core-area">
+<div class="waveform-left"><span></span><span></span><span></span><span></span><span></span></div>
+<div class="glowing-mic" id="mainMic" role="button" aria-label="Start talking" tabindex="0"><div class="mic-icon-inner">
+<svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+</div></div>
+<div class="waveform-right"><span></span><span></span><span></span><span></span><span></span></div>
+</div>
+<div class="status-text"><div class="red-dot"></div><span id="status">Tap to talk</span></div>
+<div id="chatLog" aria-live="polite"></div>
+<div class="bottom-nav">
+<button class="action-btn" id="galleryBtn"><div class="icon-circle"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div><span>Gallery</span></button>
+<button class="action-btn center-btn" id="talkBtn"><div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg></div><span>Tap to talk</span></button>
+<button class="action-btn" id="endBtn"><div class="icon-circle"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div><span>End</span></button>
+</div>
+</div></div>
+<script src="app.js"></script>
+</body></html>
